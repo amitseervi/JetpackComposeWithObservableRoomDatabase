@@ -1,27 +1,21 @@
 package com.amit.radiuscompose.model.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Transaction
-import com.amit.radiuscompose.model.entity.FacilityEntity
-import com.amit.radiuscompose.model.entity.FacilityOptionEntity
-import com.amit.radiuscompose.model.entity.FacilityWithOptions
+import com.amit.radiuscompose.model.entity.FacilityOptionSelectionEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FacilityDao {
-    @Insert
-    @Transaction
-    fun insertFacilitiesWithOptions(
-        facilities: List<FacilityEntity>,
-        options: List<FacilityOptionEntity>
-    )
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun updateUserPreferredFacilityOption(entity: FacilityOptionSelectionEntity)
 
-    @Transaction
-    @Query("SELECT * FROM facilities")
-    fun getFacilitiesWithOptions(): List<FacilityWithOptions>
+    @Query("SELECT * from user_pref_facility_option WHERE 1")
+    fun getUserFacilityPreferenceOptions(): Flow<List<FacilityOptionSelectionEntity>>
 
-    @Query("DELETE FROM exclusion_rules")
-    fun deleteAllExclusionRules()
-
+    @Delete(FacilityOptionSelectionEntity::class)
+    fun deleteUserPreferredFacilityOption(facilityOptionSelectionEntity: FacilityOptionSelectionEntity)
 }

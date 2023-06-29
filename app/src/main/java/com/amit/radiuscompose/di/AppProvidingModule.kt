@@ -44,8 +44,10 @@ object AppProvidingModule {
     @Provides
     @Singleton
     fun provideRadiusService(okHttpClient: OkHttpClient): RadiusService {
-        return Retrofit.Builder().addConverterFactory(MoshiConverterFactory.create())
-            .baseUrl(Constants.BASE_API).client(okHttpClient).build()
+        return Retrofit.Builder()
+            .addConverterFactory(MoshiConverterFactory.create())
+            .baseUrl(Constants.BASE_API)
+            .client(okHttpClient).build()
             .create(RadiusService::class.java)
     }
 }

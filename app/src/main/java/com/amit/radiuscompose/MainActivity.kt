@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
                 FacilitiesFilterUiComponent(
                     modifier = Modifier.fillMaxSize(),
                     state = uiState,
-                    onFilterItemSelect = homeViewModel::selectFacilityOption
+                    onFilterItemSelect = homeViewModel::toggleFacilityOption
                 )
             }
         }

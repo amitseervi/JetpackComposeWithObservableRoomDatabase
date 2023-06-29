@@ -3,17 +3,11 @@ package com.amit.radiuscompose.model.db
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.amit.radiuscompose.model.dao.FacilityDao
-import com.amit.radiuscompose.model.entity.ExclusionEntity
-import com.amit.radiuscompose.model.entity.ExclusionOptionsEntity
-import com.amit.radiuscompose.model.entity.FacilityEntity
-import com.amit.radiuscompose.model.entity.FacilityOptionEntity
+import com.amit.radiuscompose.model.entity.FacilityOptionSelectionEntity
 
 @Database(
     entities = [
-        ExclusionEntity::class,
-        ExclusionOptionsEntity::class,
-        FacilityEntity::class,
-        FacilityOptionEntity::class
+        FacilityOptionSelectionEntity::class
     ],
     version = 1
 )

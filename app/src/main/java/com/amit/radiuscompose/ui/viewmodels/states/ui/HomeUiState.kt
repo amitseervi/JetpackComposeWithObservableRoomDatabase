@@ -4,8 +4,8 @@ sealed interface HomeUiState {
     val error: String?
     val loading: Boolean
 
-    data class HasFilters(
-        val filters: List<FilterUiItem>,
+    data class HasFacilities(
+        val facilities: List<FacilityCard>,
         override val error: String?,
         override val loading: Boolean
     ) : HomeUiState
@@ -14,17 +14,50 @@ sealed interface HomeUiState {
         HomeUiState
 }
 
-data class FilterUiItem(
+data class FacilityCard(
+    val title: String,
     val id: String,
-    val name: String,
-    val options: List<FilterUiOption>,
-    val selectedOptionIndex: Int
-)
+    val options: List<FacilityOptionUiChip>
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
 
-data class FilterUiOption(
-    val id: String,
-    val disabled: Boolean,
-    val text: String,
+        other as FacilityCard
+
+        if (id != other.id) return false
+        return options == other.options
+    }
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result = 31 * result + options.hashCode()
+        return result
+    }
+}
+
+data class FacilityOptionUiChip(
+    val selected: Boolean,
+    val name: String,
     val icon: String,
-    val selected: Boolean
-)
+    val id: String,
+    val disabled: Boolean
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as FacilityOptionUiChip
+
+        if (selected != other.selected) return false
+        if (id != other.id) return false
+        return disabled == other.disabled
+    }
+
+    override fun hashCode(): Int {
+        var result = selected.hashCode()
+        result = 31 * result + id.hashCode()
+        result = 31 * result + disabled.hashCode()
+        return result
+    }
+}

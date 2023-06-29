@@ -3,6 +3,8 @@ package com.amit.radiuscompose.model.network.interceptor
 import android.content.Context
 import com.amit.radiuscompose.model.network.CustomHeaders
 import okhttp3.Interceptor
+import okhttp3.Protocol
+import okhttp3.Request
 import okhttp3.Response
 import okhttp3.ResponseBody.Companion.toResponseBody
 import timber.log.Timber
@@ -29,7 +31,7 @@ class NetworkCacheInterceptor(private val context: Context) :
         }
         val cacheFile = File(context.cacheDir, cacheKey)
         return if (cacheFile.exists() && cacheFile.lastModified() > System.currentTimeMillis() - cacheTTL) {
-            buildResponseFromFile(cacheFile)
+            buildResponseFromFile(cacheFile, request)
         } else {
             val response = chain.proceed(request)
             writeToCache(cacheFile, response)
@@ -37,7 +39,7 @@ class NetworkCacheInterceptor(private val context: Context) :
         }
     }
 
-    private fun buildResponseFromFile(file: File): Response {
+    private fun buildResponseFromFile(file: File, request: Request): Response {
         assert(file.exists()) {
             Timber.e("Cache file does not exist but response requested from cache file")
         }
@@ -46,6 +48,8 @@ class NetworkCacheInterceptor(private val context: Context) :
             .code(200)
             .body(fileResponse.toResponseBody())
             .message("success")
+            .protocol(Protocol.HTTP_1_1)
+            .request(request)
             .build()
     }
 
