@@ -1,0 +1,177 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "0364d135f9de748543110f9ce14b5444",
+    "entities": [
+      {
+        "tableName": "exclusion_rules",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "exclusion_options",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`exclusionSetId` INTEGER NOT NULL, `facilityId` TEXT NOT NULL, `optionsId` TEXT NOT NULL, PRIMARY KEY(`facilityId`, `optionsId`), FOREIGN KEY(`optionsId`) REFERENCES `facility_options`(`id`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`facilityId`) REFERENCES `facilities`(`facilityId`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`exclusionSetId`) REFERENCES `exclusion_rules`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "exclusionSetId",
+            "columnName": "exclusionSetId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "facilityId",
+            "columnName": "facilityId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "optionsId",
+            "columnName": "optionsId",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "facilityId",
+            "optionsId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "facility_options",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "optionsId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "facilities",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "facilityId"
+            ],
+            "referencedColumns": [
+              "facilityId"
+            ]
+          },
+          {
+            "table": "exclusion_rules",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "exclusionSetId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "facilities",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`facilityId` TEXT NOT NULL, `name` TEXT NOT NULL, PRIMARY KEY(`facilityId`))",
+        "fields": [
+          {
+            "fieldPath": "facilityId",
+            "columnName": "facilityId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "facilityId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "facility_options",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `names` TEXT NOT NULL, `icon` TEXT NOT NULL, `facilityId` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`facilityId`) REFERENCES `facilities`(`facilityId`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "names",
+            "columnName": "names",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "icon",
+            "columnName": "icon",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "facilityId",
+            "columnName": "facilityId",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "facilities",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "facilityId"
+            ],
+            "referencedColumns": [
+              "facilityId"
+            ]
+          }
+        ]
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0364d135f9de748543110f9ce14b5444')"
+    ]
+  }
+}

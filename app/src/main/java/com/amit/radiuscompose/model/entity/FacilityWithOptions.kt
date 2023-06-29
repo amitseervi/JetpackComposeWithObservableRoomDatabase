@@ -1,6 +1,7 @@
 package com.amit.radiuscompose.model.entity
 
 import androidx.room.Embedded
+import androidx.room.Entity
 import androidx.room.Relation
 
 data class FacilityWithOptions(

@@ -2,10 +2,13 @@ package com.amit.radiuscompose.model.entity
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 
 
 @Entity(
-    "exclusion_options", primaryKeys = ["facilityId", "optionsId"], foreignKeys = [
+    "exclusion_options",
+    primaryKeys = ["facilityId", "optionsId"],
+    foreignKeys = [
         ForeignKey(
             entity = FacilityOptionEntity::class,
             parentColumns = ["id"],

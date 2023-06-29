@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import com.amit.radiuscompose.model.entity.FacilityEntity
+import com.amit.radiuscompose.model.entity.FacilityOptionEntity
 import com.amit.radiuscompose.model.entity.FacilityWithOptions
 
 @Dao
@@ -13,7 +14,7 @@ interface FacilityDao {
     @Transaction
     fun insertFacilitiesWithOptions(
         facilities: List<FacilityEntity>,
-        options: List<FacilityWithOptions>
+        options: List<FacilityOptionEntity>
     )
 
     @Transaction
