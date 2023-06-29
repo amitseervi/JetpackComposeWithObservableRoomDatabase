@@ -27,7 +27,8 @@ class MainActivity : ComponentActivity() {
                 FacilitiesFilterUiComponent(
                     modifier = Modifier.fillMaxSize(),
                     state = uiState,
-                    onFilterItemSelect = homeViewModel::toggleFacilityOption
+                    onFilterItemSelect = homeViewModel::toggleFacilityOption,
+                    retryClicked = homeViewModel::onRefresh
                 )
             }
         }

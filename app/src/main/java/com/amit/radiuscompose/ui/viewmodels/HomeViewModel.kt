@@ -134,11 +134,7 @@ class HomeViewModel @Inject constructor(
                 }
             }
         }
-        viewModelScope.launch(CoroutineExceptionHandler { coroutineContext, exception ->
-            Timber.tag("test").e(exception)
-        }) {
-            facilityRepository.refresh()
-        }
+        onRefresh()
     }
 
     fun toggleFacilityOption(facilityId: String, optionId: String, enable: Boolean) {
@@ -148,6 +144,14 @@ class HomeViewModel @Inject constructor(
                 optionId,
                 enable
             )
+        }
+    }
+
+    fun onRefresh() {
+        viewModelScope.launch(CoroutineExceptionHandler { coroutineContext, exception ->
+            Timber.e(exception)
+        }) {
+            facilityRepository.refresh()
         }
     }
 }

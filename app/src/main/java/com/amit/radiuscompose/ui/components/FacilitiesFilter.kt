@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -44,7 +45,8 @@ import com.amit.radiuscompose.ui.viewmodels.states.ui.HomeUiState
 fun FacilitiesFilterUiComponent(
     modifier: Modifier = Modifier,
     state: HomeUiState,
-    onFilterItemSelect: (categoryId: String, optionId: String, enable: Boolean) -> Unit
+    onFilterItemSelect: (categoryId: String, optionId: String, enable: Boolean) -> Unit,
+    retryClicked: () -> Unit
 ) {
     Scaffold(
         modifier = modifier
@@ -64,7 +66,8 @@ fun FacilitiesFilterUiComponent(
                     EmptyScreen(
                         modifier = Modifier.fillMaxSize(),
                         loading = state.loading,
-                        error = state.error
+                        error = state.error,
+                        retryClicked = retryClicked
                     )
                 }
 
@@ -77,7 +80,12 @@ fun FacilitiesFilterUiComponent(
 }
 
 @Composable
-private fun EmptyScreen(modifier: Modifier = Modifier, loading: Boolean, error: String?) {
+private fun EmptyScreen(
+    modifier: Modifier = Modifier,
+    loading: Boolean,
+    error: String?,
+    retryClicked: () -> Unit
+) {
     Box(modifier = modifier) {
         if (loading) {
             Row(modifier = Modifier.align(Alignment.Center)) {
@@ -86,11 +94,20 @@ private fun EmptyScreen(modifier: Modifier = Modifier, loading: Boolean, error: 
                 Text(text = "Loading...")
             }
         } else if (error != null) {
-            Text(
-                text = "Error : ${error}",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.error
-            )
+            Column(
+                modifier = Modifier.align(Alignment.Center),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Error occurred $error",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.error
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(onClick = retryClicked) {
+                    Text(text = "Retry")
+                }
+            }
         }
     }
 }
@@ -102,7 +119,11 @@ private fun HasFilterScreen(
     onFilterItemSelect: (categoryId: String, optionId: String, enable: Boolean) -> Unit
 ) {
     val maxWidthModifier = Modifier.fillMaxWidth()
-    Column(modifier = modifier.fillMaxSize().padding(20.dp)) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(20.dp)
+    ) {
         if (state.loading) {
             LinearProgressIndicator(modifier = maxWidthModifier)
         } else if (state.error != null) {
@@ -259,4 +280,14 @@ private fun iconNameToResource(name: String): Int? {
         "garage" -> R.drawable.garage
         else -> null
     }
+}
+
+@Preview
+@Composable
+fun PreviewHomeScreen() {
+    val homeUiState = HomeUiState.Empty(error = "Timeout", loading = false)
+    FacilitiesFilterUiComponent(
+        state = homeUiState,
+        onFilterItemSelect = { x, y, z -> },
+        retryClicked = {})
 }
