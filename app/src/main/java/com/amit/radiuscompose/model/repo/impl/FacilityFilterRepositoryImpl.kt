@@ -27,10 +27,17 @@ class FacilityFilterRepositoryImpl @Inject constructor(
             RepositoryStatus.Loading()
         }
         val networkResponse = service.getFacilitiesData()
-        if (networkResponse.isSuccessful) {
-            RepositoryStatus.Success(networkResponse.body())
+        val result = if (networkResponse.isSuccessful) {
+            networkResponse.body().let { data ->
+                if (data == null) {
+                    Error("Null Data received", 200)
+                } else {
+                    RepositoryStatus.Success(data)
+                }
+            }
         } else {
             Error(networkResponse.message(), networkResponse.code())
         }
+        mStatus.update { result }
     }
 }
