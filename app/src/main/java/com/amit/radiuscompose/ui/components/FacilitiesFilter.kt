@@ -102,7 +102,7 @@ private fun HasFilterScreen(
     onFilterItemSelect: (categoryId: String, optionId: String, enable: Boolean) -> Unit
 ) {
     val maxWidthModifier = Modifier.fillMaxWidth()
-    Column(modifier = modifier.fillMaxSize()) {
+    Column(modifier = modifier.fillMaxSize().padding(20.dp)) {
         if (state.loading) {
             LinearProgressIndicator(modifier = maxWidthModifier)
         } else if (state.error != null) {
@@ -110,7 +110,7 @@ private fun HasFilterScreen(
         }
         LazyColumn(
             modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+            verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             items(
                 state.facilities.size,
