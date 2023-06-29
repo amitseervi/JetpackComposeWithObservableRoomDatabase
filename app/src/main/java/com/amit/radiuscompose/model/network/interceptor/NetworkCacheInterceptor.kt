@@ -3,9 +3,12 @@ package com.amit.radiuscompose.model.network.interceptor
 import android.content.Context
 import com.amit.radiuscompose.model.network.CustomHeaders
 import okhttp3.Interceptor
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.Protocol
 import okhttp3.Request
 import okhttp3.Response
+import okhttp3.ResponseBody
 import okhttp3.ResponseBody.Companion.toResponseBody
 import timber.log.Timber
 import java.io.File
@@ -33,10 +36,24 @@ class NetworkCacheInterceptor(private val context: Context) :
         return if (cacheFile.exists() && cacheFile.lastModified() > System.currentTimeMillis() - cacheTTL) {
             buildResponseFromFile(cacheFile, request)
         } else {
-            val response = chain.proceed(request)
-            writeToCache(cacheFile, response)
-            response
+            return try {
+                val response = chain.proceed(request)
+                writeToCache(cacheFile, response)
+                response
+            } catch (e: Exception) {
+                buildResponseFromError(e, request)
+            }
         }
+    }
+
+    private fun buildResponseFromError(exception: java.lang.Exception, request: Request): Response {
+        return Response.Builder()
+            .code(500)
+            .body("error : ${exception.message}".toResponseBody(contentType = "text/html".toMediaType()))
+            .message(exception.message ?: "error")
+            .protocol(Protocol.HTTP_1_1)
+            .request(request)
+            .build()
     }
 
     private fun buildResponseFromFile(file: File, request: Request): Response {

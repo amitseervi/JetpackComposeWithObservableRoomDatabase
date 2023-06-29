@@ -11,6 +11,7 @@ import com.amit.radiuscompose.ui.viewmodels.states.ui.FacilityOptionUiChip
 import com.amit.radiuscompose.ui.viewmodels.states.ui.HomeUiState
 import com.amit.radiuscompose.ui.viewmodels.states.vm.HomeViewModelState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -19,6 +20,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -132,14 +134,20 @@ class HomeViewModel @Inject constructor(
                 }
             }
         }
-        viewModelScope.launch {
+        viewModelScope.launch(CoroutineExceptionHandler { coroutineContext, exception ->
+            Timber.tag("test").e(exception)
+        }) {
             facilityRepository.refresh()
         }
     }
 
     fun toggleFacilityOption(facilityId: String, optionId: String, enable: Boolean) {
         viewModelScope.launch {
-            facilityUserPreferenceRepository.saveFacilityOptionSelection(facilityId, optionId,enable)
+            facilityUserPreferenceRepository.saveFacilityOptionSelection(
+                facilityId,
+                optionId,
+                enable
+            )
         }
     }
 }

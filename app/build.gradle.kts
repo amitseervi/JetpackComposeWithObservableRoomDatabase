@@ -136,4 +136,7 @@ dependencies {
 
     implementation(libs.retrofit)
     implementation(libs.converter.moshi)
+
+    platform(libs.okhttp.bom)
+
 }
