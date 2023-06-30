@@ -33,7 +33,7 @@ which is declared on api declaration using retrofit client.
 - Hilt
 
 ## Image
-![radius_screenshot.png](./radius_screenshot.png)
+![radius_screenshot.png](https://github.com/amitseervi/radius/blob/main/radius_screenshot.png)
 
 #### Next Steps
 - [Fix] release build is not working due to R8 minimisation network response model is not able to populate field from network response to data class properly.
