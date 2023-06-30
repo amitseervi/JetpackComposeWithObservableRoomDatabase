@@ -11,8 +11,3 @@ data class HomeViewModelState(
     val exclusion: List<List<ExclusionRuleSetItem>> = emptyList(),
     val userPreference: List<Pair<String, String>> = emptyList()
 )
-
-data class HomeViewModelStateSelection(
-    val facilityId: String,
-    val optionId: String
-)

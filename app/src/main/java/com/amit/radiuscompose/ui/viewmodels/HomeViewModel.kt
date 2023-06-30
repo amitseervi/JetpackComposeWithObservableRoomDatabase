@@ -119,10 +119,6 @@ class HomeViewModel @Inject constructor(
                                 facilities = repoResponse.data.facilities
                             )
                         }
-
-                        else -> {
-                            currentState
-                        }
                     }
                 }
             }

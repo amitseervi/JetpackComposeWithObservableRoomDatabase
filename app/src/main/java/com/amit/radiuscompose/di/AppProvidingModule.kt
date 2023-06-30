@@ -16,6 +16,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.File
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -34,11 +35,13 @@ object AppProvidingModule {
     @Singleton
     fun provideOkhttpClient(@ApplicationContext context: Context): OkHttpClient {
         return OkHttpClient.Builder().cache(
-                Cache(
-                    directory = File(context.cacheDir, "http_cache"),
-                    maxSize = 10L * 1024L * 1024L // 10 MiB Cache
-                )
-            ).addInterceptor(NetworkCacheInterceptor(context)).build()
+            Cache(
+                directory = File(context.cacheDir, "http_cache"),
+                maxSize = 10L * 1024L * 1024L // 10 MiB Cache
+            )
+        ).addInterceptor(NetworkCacheInterceptor(context))
+            .callTimeout(30, TimeUnit.SECONDS)
+            .build()
     }
 
     @Provides

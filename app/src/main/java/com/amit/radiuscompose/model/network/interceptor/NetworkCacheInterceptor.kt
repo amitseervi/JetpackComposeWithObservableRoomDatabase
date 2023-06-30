@@ -34,15 +34,23 @@ class NetworkCacheInterceptor(private val context: Context) :
         }
         val cacheFile = File(context.cacheDir, cacheKey)
         return if (cacheFile.exists() && cacheFile.lastModified() > System.currentTimeMillis() - cacheTTL) {
+            Timber.i("NetworkCacheInterceptor : read from file")
             buildResponseFromFile(cacheFile, request)
         } else {
-            return try {
+            val result = try {
                 val response = chain.proceed(request)
-                writeToCache(cacheFile, response)
-                response
+                if (response.isSuccessful) {
+                    Timber.i("NetworkCacheInterceptor : write response to file and build from data array")
+                    return writeToCache(cacheFile, response)
+                } else {
+                    Timber.i("NetworkCacheInterceptor : return same response to consumer")
+                    return response
+                }
             } catch (e: Exception) {
+                Timber.i("NetworkCacheInterceptor : build error response")
                 buildResponseFromError(e, request)
             }
+            result
         }
     }
 
@@ -70,16 +78,30 @@ class NetworkCacheInterceptor(private val context: Context) :
             .build()
     }
 
-    private fun writeToCache(file: File, response: Response) {
+    private fun buildResponseFromByteArray(data: ByteArray, request: Request): Response {
+        return Response.Builder()
+            .code(200)
+            .body(data.toResponseBody())
+            .message("success")
+            .protocol(Protocol.HTTP_1_1)
+            .request(request)
+            .build()
+    }
+
+    private fun writeToCache(file: File, response: Response): Response {
         if (!file.exists()) {
             file.createNewFile()
+            file.setWritable(true)
         }
-        if (!response.isSuccessful) {
-            return
+        response.body.let { responseBody ->
+            if (responseBody != null) {
+                val data = responseBody.bytes()
+                file.writeBytes(data)
+                file.setLastModified(System.currentTimeMillis())
+                return buildResponseFromByteArray(data, response.request)
+            } else {
+                return response
+            }
         }
-        response.body?.bytes()?.let {
-            file.writeBytes(it)
-        }
-
     }
 }

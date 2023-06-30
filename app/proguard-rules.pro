@@ -1,7 +1,6 @@
--keep class com.amit.radiuscompose.model.response.FacilitiesData
--keep class com.amit.radiuscompose.model.response.FacilityItem
--keep class com.amit.radiuscompose.model.response.ExclusionRuleSetItem
--keep class com.amit.radiuscompose.model.response.FacilityOption
+-keep public class com.amit.radiuscompose.** {
+  public protected *;
+}
 
 -keep,allowobfuscation,allowshrinking interface retrofit2.Call
 -keep,allowobfuscation,allowshrinking class retrofit2.Response
