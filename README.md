@@ -1,4 +1,4 @@
-# Radius project
+# Jetpack compose sample project
 
 ## Summary
 
